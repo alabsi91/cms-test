@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="robots" content="noindex" />
+		<link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+		<title>Content Manager</title>
+	</head>
+	<body>
+		<!-- Dashboard script-->
+		<script is:inline src="https://unpkg.com/decap-cms@^3.4.0/dist/decap-cms.js"></script>
+		<script is:inline src="https://unpkg.com/decap-cms@^3.4.0/dist/decap-cms-locales.js"></script>
+		<!-- netlify identity -->
+		<script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+		<!-- Customize the netlify identity widget to refresh on logout preventing users from using the cms when not logged in and then seeing an error -->
+		<script is:inline>
+			netlifyIdentity.on("logout", () => location.reload());
+		</script>
+
+		<!-- CSS in preview panel -->
+		<script>
+			const ar = {
+				auth: {
+					login: "تسجيل الدخول",
+					loggingIn: "جاري تسجيل الدخول...",
+					loginWithNetlifyIdentity: "تسجيل الدخول باستخدام Netlify Identity",
+					loginWithAzure: "تسجيل الدخول باستخدام Azure",
+					loginWithBitbucket: "تسجيل الدخول باستخدام Bitbucket",
+					loginWithGitHub: "تسجيل الدخول باستخدام GitHub",
+					loginWithGitLab: "تسجيل الدخول باستخدام GitLab",
+					loginWithGitea: "تسجيل الدخول باستخدام Gitea",
+					errors: {
+						email: "تأكد من إدخال بريدك الإلكتروني.",
+						password: "يرجى إدخال كلمة المرور.",
+						identitySettings:
+							"تعذر الوصول إلى إعدادات الهوية. عند استخدام git-gateway، تأكد من تمكين خدمة الهوية وGit Gateway.",
+					},
+				},
+				app: {
+					header: {
+						content: "المحتوى",
+						workflow: "سير العمل",
+						media: "الوسائط",
+						quickAdd: "إضافة سريعة",
+					},
+					app: {
+						errorHeader: "خطأ في تحميل إعدادات CMS",
+						configErrors: "أخطاء في الإعدادات",
+						checkConfigYml: "تحقق من ملف config.yml.",
+						loadingConfig: "جاري تحميل الإعدادات...",
+						waitingBackend: "جاري انتظار الخلفية...",
+					},
+					notFoundPage: {
+						header: "غير موجود",
+					},
+				},
+				collection: {
+					sidebar: {
+						collections: "المجموعات",
+						allCollections: "جميع المجموعات",
+						searchAll: "البحث في الكل",
+						searchIn: "البحث في",
+					},
+					collectionTop: {
+						sortBy: "ترتيب حسب",
+						viewAs: "عرض كـ",
+						newButton: "جديد %{collectionLabel}",
+						ascending: "تصاعدي",
+						descending: "تنازلي",
+						searchResults: 'نتائج البحث عن "%{searchTerm}"',
+						searchResultsInCollection: 'نتائج البحث عن "%{searchTerm}" في %{collection}',
+						filterBy: "تصفية حسب",
+						groupBy: "التجميع حسب",
+					},
+					entries: {
+						loadingEntries: "جاري تحميل الإدخالات...",
+						cachingEntries: "جاري تخزين الإدخالات...",
+						longerLoading: "قد يستغرق هذا بضع دقائق",
+						noEntries: "لا توجد إدخالات",
+					},
+					groups: {
+						other: "آخر",
+						negateLabel: "ليس %{label}",
+					},
+					defaultFields: {
+						author: {
+							label: "المؤلف",
+						},
+						updatedOn: {
+							label: "تم التحديث في",
+						},
+					},
+				},
+				editor: {
+					editorControl: {
+						field: {
+							optional: "اختياري",
+						},
+					},
+					editorControlPane: {
+						widget: {
+							required: "%{fieldLabel} مطلوب.",
+							regexPattern: "%{fieldLabel} لا يتطابق مع النمط: %{pattern}.",
+							processing: "%{fieldLabel} قيد المعالجة.",
+							range: "%{fieldLabel} يجب أن يكون بين %{minValue} و %{maxValue}.",
+							min: "%{fieldLabel} يجب أن يكون على الأقل %{minValue}.",
+							max: "%{fieldLabel} يجب أن يكون %{maxValue} أو أقل.",
+							rangeCount:
+								"%{fieldLabel} يجب أن يحتوي على بين %{minCount} و %{maxCount} عنصر(عناصر).",
+							rangeCountExact: "%{fieldLabel} يجب أن يحتوي على بالضبط %{count} عنصر(عناصر).",
+							rangeMin: "%{fieldLabel} يجب أن يحتوي على الأقل %{minCount} عنصر(عناصر).",
+							rangeMax: "%{fieldLabel} يجب أن يحتوي على %{maxCount} أو أقل عنصر(عناصر).",
+							invalidPath: `'%{path}' ليس مسارًا صالحًا`,
+							pathExists: `المسار '%{path}' موجود بالفعل`,
+						},
+						i18n: {
+							writingInLocale: "كتابة في %{locale}",
+							copyFromLocale: "املأ من لغة أخرى",
+							copyFromLocaleConfirm:
+								"هل ترغب في تعبئة البيانات من اللغة %{locale}؟\nسيتم استبدال جميع المحتويات الحالية.",
+						},
+					},
+					editor: {
+						onLeavePage: "هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟",
+						onUpdatingWithUnsavedChanges: "لديك تغييرات غير محفوظة، يرجى الحفظ قبل التحديث.",
+						onPublishingNotReady: 'يرجى تحديث الحالة إلى "جاهز" قبل النشر.',
+						onPublishingWithUnsavedChanges: "لديك تغييرات غير محفوظة، يرجى الحفظ قبل النشر.",
+						onPublishing: "هل أنت متأكد أنك تريد نشر هذه الإدخال؟",
+						onUnpublishing: "هل أنت متأكد أنك تريد إلغاء نشر هذه الإدخال؟",
+						onDeleteWithUnsavedChanges:
+							"هل أنت متأكد أنك تريد حذف هذا الإدخال المنشور، بالإضافة إلى التغييرات غير المحفوظة من الجلسة الحالية؟",
+						onDeletePublishedEntry: "هل أنت متأكد أنك تريد حذف هذا الإدخال المنشور؟",
+						onDeleteUnpublishedChangesWithUnsavedChanges:
+							"سيؤدي هذا إلى حذف جميع التغييرات غير المنشورة لهذه الإدخال، بالإضافة إلى التغييرات غير المحفوظة من الجلسة الحالية. هل ترغب في الحذف؟",
+						onDeleteUnpublishedChanges:
+							"سيتم حذف جميع التغييرات غير المنشورة لهذه الإدخال. هل ترغب في الحذف؟",
+						loadingEntry: "جاري تحميل الإدخال...",
+						confirmLoadBackup: "تم استرجاع نسخة احتياطية محلية لهذا الإدخال، هل ترغب في استخدامها؟",
+					},
+					editorInterface: {
+						toggleI18n: "تبديل i18n",
+						togglePreview: "تبديل المعاينة",
+						toggleScrollSync: "مزامنة التمرير",
+					},
+					editorToolbar: {
+						publishing: "جاري النشر...",
+						publish: "نشر",
+						published: "تم النشر",
+						unpublish: "إلغاء النشر",
+						duplicate: "تكرار",
+						unpublishing: "جاري إلغاء النشر...",
+						publishAndCreateNew: "نشر وإنشاء جديد",
+						publishAndDuplicate: "نشر وتكرار",
+						deleteUnpublishedChanges: "حذف التغييرات غير المنشورة",
+						deleteUnpublishedEntry: "حذف الإدخال غير المنشور",
+						deletePublishedEntry: "حذف الإدخال المنشور",
+						deleteEntry: "حذف الإدخال",
+						saving: "جاري الحفظ...",
+						save: "حفظ",
+						statusInfoTooltipDraft:
+							'حالة الإدخال تم تعيينها كمسودة. لإتمامها وتقديمها للمراجعة، قم بتعيين الحالة إلى "قيد المراجعة"',
+						statusInfoTooltipInReview:
+							"الإدخال قيد المراجعة، لا توجد خطوات إضافية مطلوبة. ومع ذلك، يمكنك إجراء تغييرات إضافية أثناء المراجعة.",
+						deleting: "جاري الحذف...",
+						updating: "جاري التحديث...",
+						status: "الحالة: %{status}",
+						backCollection: " الكتابة في مجموعة %{collectionLabel}",
+						unsavedChanges: "تغييرات غير محفوظة",
+						changesSaved: "تم حفظ التغييرات",
+						draft: "مسودة",
+						inReview: "قيد المراجعة",
+						ready: "جاهز",
+						publishNow: "انشر الآن",
+						deployPreviewPendingButtonLabel: "التحقق من المعاينة",
+						deployPreviewButtonLabel: "عرض المعاينة",
+						deployButtonLabel: "عرض مباشر",
+					},
+					editorWidgets: {
+						markdown: {
+							bold: "عريض",
+							italic: "مائل",
+							code: "كود",
+							link: "رابط",
+							linkPrompt: "أدخل رابط الـ URL",
+							headings: "عناوين",
+							quote: "اقتباس",
+							bulletedList: "قائمة نقطية",
+							numberedList: "قائمة مرقمة",
+							addComponent: "إضافة مكون",
+							richText: "نص منسق",
+							markdown: "مارك داون",
+						},
+						image: {
+							choose: "اختيار صورة",
+							chooseMultiple: "اختيار صور",
+							chooseUrl: "إدراج من URL",
+							replaceUrl: "استبدال بـ URL",
+							promptUrl: "أدخل URL الصورة",
+							chooseDifferent: "اختيار صورة مختلفة",
+							addMore: "إضافة المزيد من الصور",
+							remove: "إزالة الصورة",
+							removeAll: "إزالة جميع الصور",
+						},
+						file: {
+							choose: "اختيار ملف",
+							chooseUrl: "إدراج من URL",
+							chooseMultiple: "اختيار ملفات",
+							replaceUrl: "استبدال بـ URL",
+							promptUrl: "أدخل URL الملف",
+							chooseDifferent: "اختيار ملف مختلف",
+							addMore: "إضافة المزيد من الملفات",
+							remove: "إزالة الملف",
+							removeAll: "إزالة جميع الملفات",
+						},
+						unknownControl: {
+							noControl: "لا يوجد تحكم لـ '%{widget}'.",
+						},
+						unknownPreview: {
+							noPreview: "لا توجد معاينة لـ '%{widget}'.",
+						},
+						headingOptions: {
+							headingOne: "عنوان 1",
+							headingTwo: "عنوان 2",
+							headingThree: "عنوان 3",
+							headingFour: "عنوان 4",
+							headingFive: "عنوان 5",
+							headingSix: "عنوان 6",
+						},
+						datetime: {
+							now: "الآن",
+							clear: "مسح",
+						},
+						list: {
+							add: "إضافة %{item}",
+							addType: "إضافة %{item}",
+						},
+					},
+				},
+				mediaLibrary: {
+					mediaLibraryCard: {
+						draft: "مسودة",
+						copy: "نسخ",
+						copyUrl: "نسخ الرابط",
+						copyPath: "نسخ المسار",
+						copyName: "نسخ الاسم",
+						copied: "تم النسخ",
+					},
+					mediaLibrary: {
+						onDelete: "هل أنت متأكد أنك تريد حذف الوسائط المحددة؟",
+						fileTooLarge:
+							"الملف كبير جدًا.\nتم تكوين النظام لعدم السماح بالملفات التي تزيد عن %{size} كيلوبايت.",
+					},
+					mediaLibraryModal: {
+						loading: "جاري التحميل...",
+						noResults: "لا توجد نتائج.",
+						noAssetsFound: "لم يتم العثور على أصول.",
+						noImagesFound: "لم يتم العثور على صور.",
+						private: "خاص ",
+						images: "صور",
+						mediaAssets: "أصول الوسائط",
+						search: "بحث...",
+						uploading: "جاري التحميل...",
+						upload: "تحميل",
+						download: "تنزيل",
+						deleting: "جاري الحذف...",
+						deleteSelected: "حذف المحدد",
+						chooseSelected: "اختيار المحدد",
+					},
+				},
+				ui: {
+					default: {
+						goBackToSite: "الرجوع إلى الموقع",
+					},
+					errorBoundary: {
+						title: "خطأ",
+						details: "حدث خطأ - من فضلك ",
+						reportIt: "افتح مشكلة على GitHub.",
+						detailsHeading: "التفاصيل",
+						privacyWarning:
+							"فتح مشكلة سيقوم بملئها برسالة الخطأ وبيانات التصحيح.\nيرجى التحقق من صحة المعلومات وإزالة البيانات الحساسة إذا كانت موجودة.",
+						recoveredEntry: {
+							heading: "تم استرجاع الوثيقة",
+							warning: "يرجى نسخها/لصقها في مكان ما قبل الانتقال!",
+							copyButtonLabel: "نسخ إلى الحافظة",
+						},
+					},
+					settingsDropdown: {
+						logOut: "تسجيل الخروج",
+					},
+					toast: {
+						onFailToLoadEntries: "فشل في تحميل الإدخال: %{details}",
+						onFailToLoadDeployPreview: "فشل في تحميل المعاينة: %{details}",
+						onFailToPersist: "فشل في حفظ الإدخال: %{details}",
+						onFailToDelete: "فشل في حذف الإدخال: %{details}",
+						onFailToUpdateStatus: "فشل في تحديث الحالة: %{details}",
+						missingRequiredField: "عذرًا، لقد فاتك حقل مطلوب. يرجى إكماله قبل الحفظ.",
+						entrySaved: "تم حفظ الإدخال",
+						entryPublished: "تم نشر الإدخال",
+						entryUnpublished: "تم إلغاء نشر الإدخال",
+						onFailToPublishEntry: "فشل في النشر: %{details}",
+						onFailToUnpublishEntry: "فشل في إلغاء نشر الإدخال: %{details}",
+						entryUpdated: "تم تحديث حالة الإدخال",
+						onDeleteUnpublishedChanges: "تم حذف التغييرات غير المنشورة",
+						onFailToAuth: "%{details}",
+						onLoggedOut: "تم تسجيل الخروج، يرجى حفظ أي بيانات وتسجيل الدخول مرة أخرى",
+						onBackendDown: "خدمة الخلفية تواجه مشكلة. راجع %{details} للمزيد من المعلومات",
+					},
+				},
+				workflow: {
+					workflow: {
+						loading: "جاري تحميل إدخالات سير العمل التحريري",
+						workflowHeading: "سير العمل التحريري",
+						newPost: "منشور جديد",
+						description:
+							"%{smart_count} إدخال في انتظار المراجعة، %{readyCount} جاهز للعرض. |||| %{smart_count} إدخالات في انتظار المراجعة، %{readyCount} جاهز للعرض.",
+						dateFormat: "D MMMM",
+					},
+					workflowCard: {
+						lastChange: "%{date} بواسطة %{author}",
+						lastChangeNoAuthor: "%{date}",
+						lastChangeNoDate: "بواسطة %{author}",
+						deleteChanges: "حذف التغييرات",
+						deleteNewEntry: "حذف الإدخال الجديد",
+						publishChanges: "نشر التغييرات",
+						publishNewEntry: "نشر الإدخال الجديد",
+					},
+					workflowList: {
+						onDeleteEntry: "هل أنت متأكد أنك تريد حذف هذا الإدخال؟",
+						onPublishingNotReadyEntry:
+							'يمكن نشر العناصر فقط التي تحتوي على حالة "جاهز". من فضلك اسحب البطاقة إلى عمود "جاهز" لتمكين النشر.',
+						onPublishEntry: "هل أنت متأكد أنك تريد نشر هذا الإدخال؟",
+						draftHeader: "المسودات",
+						inReviewHeader: "قيد المراجعة",
+						readyHeader: "جاهز",
+						currentEntries: "%{smart_count} إدخال |||| %{smart_count} إدخالات",
+					},
+				},
+			};
+
+			CMS.registerPreviewStyle("/global.css");
+			CMS.registerLocale("ar", ar);
+		</script>
+		<!-- Only showing body in preview panel -->
+		<script src="@utils/preview.js"></script>
+	</body>
+</html>
